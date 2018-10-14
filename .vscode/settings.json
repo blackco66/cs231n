@@ -3,6 +3,6 @@
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
     "editor.formatOnType": true,
-    "python.pythonPath": "C:\\Users\\blackco\\Anaconda3\\envs\\cs231n",
+    "python.pythonPath": "C:\\Users\\blackco\\Anaconda3\\envs\\cs231n\\python.exe",
     "python.formatting.provider": "autopep8"
 }
