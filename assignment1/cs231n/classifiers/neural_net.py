@@ -75,8 +75,9 @@ class TwoLayerNet(object):
     # Store the result in the scores variable, which should be an array of      #
     # shape (N, C).                                                             #
     #############################################################################
-    h1 = np.maximum(0, np.dot(X, W1) + b1) #activation function ReLU
-    scores = np.dot(h1, W2) + b2
+    h1 = np.dot(X, W1) + b1
+    h1_relu = np.maximum(0, h1) #activation function ReLU
+    scores = np.dot(h1_relu, W2) + b2
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
@@ -93,12 +94,12 @@ class TwoLayerNet(object):
     # in the variable loss, which should be a scalar. Use the Softmax           #
     # classifier loss.                                                          #
     #############################################################################
-    shift_scores = scores - np.max(scores,axis=1).reshape(-1,1)
+    shift_scores = scores - np.max(scores,axis=1).reshape(-1,1) #(N, C)
     exps = np.exp(shift_scores)
-    softmax_output = exps/np.sum(exps,axis=1).reshape(-1,1) #shape (N, C)
+    softmax_output = exps / np.sum(exps,axis=1).reshape(-1,1) #shape (N, C)
     loss = np.sum(-np.log(softmax_output[range(N), y]))
     loss /= N
-    loss += reg*(np.sum(W1*W1)+np.sum(W2*W2))
+    loss += reg * (np.sum(W1*W1)+np.sum(W2*W2))
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
@@ -110,7 +111,15 @@ class TwoLayerNet(object):
     # and biases. Store the results in the grads dictionary. For example,       #
     # grads['W1'] should store the gradient on W1, and be a matrix of same size #
     #############################################################################
-    pass
+    dout = softmax_output.copy()
+    dout[range(N), y] -= 1
+    dout /= N
+    grads['W2'] = np.dot(h1_relu.T, dout)
+    grads['W2'] +=  2 * reg * W2
+    #XW 에서 X끝에 1을 붙여서 계산하면 b를 고려한게 됨.
+    grads['b2'] = np.sum(dout, axis=0)
+    
+    dh_relu = 
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
